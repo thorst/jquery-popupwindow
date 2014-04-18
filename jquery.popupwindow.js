@@ -18,7 +18,8 @@
     status:      false,
     toolbar:     false,
     top:         0,
-    width:       500
+    width:       500,
+    forcerefresh:true
   };
 
   $.popupWindow = function(url, opts) {
@@ -45,15 +46,33 @@
     params.push('left=' + options.left);
     params.push('top=' + options.top);
 
-    // open window
+    // define name
     var random = new Date().getTime();
     var name = options.name || (options.createNew ? 'popup_window_' + random : 'popup_window');
-    var win = window.open(url, name, params.join(','));
+
+    // get existing win handle if exists
+    // would be nice if we could make this persistent
+    if (!$.popupWindow.win) { $.popupWindow.win = []; }
+    var winPOS = -1;
+    for (var i = 0, len = $.popupWindow.win.length; i < len; i++) {
+      if ($.popupWindow.win[i].name === name) { winPOS = i; break; }
+    }      
+
+    // add to global if it didnt already exist
+    if (winPOS === -1) {
+      $.popupWindow.win.push({ name: name, win: { closed: true } });
+      winPOS = $.popupWindow.win.length - 1;
+    }
+        
+    // determine whether to open window
+    if (options.forcerefresh || $.popupWindow.win[winPOS].win.closed) {
+      $.popupWindow.win[winPOS].win = window.open(url, name, params.join(','));
+    }
 
     // unload handler
     if (options.onUnload && typeof options.onUnload === 'function') {
-      var unloadInterval = setInterval(function() {
-        if (!win || win.closed) {
+      var unloadInterval = setInterval(function () {
+        if (!$.popupWindow.win[winPOS].win || $.popupWindow.win[winPOS].win.closed) {
           clearInterval(unloadInterval);
           options.onUnload();
         }
@@ -61,11 +80,11 @@
     }
 
     // focus window
-    if (win && win.focus) {
-      win.focus();
-    }
+    if ($.popupWindow.win[winPOS].win && $.popupWindow.win[winPOS].win.focus) {
+      $.popupWindow.win[winPOS].win.focus();
+    }       
 
     // return handle to window
-    return win;
+    return $.popupWindow.win[winPOS].win;
   };
 })(jQuery);

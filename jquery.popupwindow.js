@@ -18,10 +18,15 @@
     status:      false,
     toolbar:     false,
     top:         0,
-    width:       500
+    width:       500,
+    url: ""
   };
 
   $.popupWindow = function(url, opts) {
+    if ($.isPlainObject(url)) {
+      opts = url;
+      url = opts.url;
+    }
     var options = $.extend({}, defaults, opts);
 
     // center the window

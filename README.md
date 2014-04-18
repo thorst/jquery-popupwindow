@@ -73,6 +73,7 @@ There are more [examples] to look at as well.
 | `toolbar`    | boolean  | `false` |       |
 | `top`        | integer  | `0`     |       |
 | `width`      | integer  | `500`   |       |
+| `forcerefresh`|boolean  | `true`  | if popup is still open it will refresh the window. If the user clicked a link and was taken to a different page, they will be taken back to the original page. Likewise, if the user has entered text on a form or performed some action that needed saved, they will lose any unsaved work.
 
 ## License
 

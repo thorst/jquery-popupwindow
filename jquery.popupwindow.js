@@ -70,7 +70,7 @@
         
     // determine whether to open window
     // the user wants to always refresh, the handle says its closed, the href is a new page
-    if (options.forcerefresh || $.popupWindow.win[winPOS].win.closed || winHref === "about:blank") {
+    if (options.forcerefresh || $.popupWindow.win[winPOS].win.closed || typeof winHref !== "undefined") {
       $.popupWindow.win[winPOS].win = window.open(url, name, params.join(','));
     }
 

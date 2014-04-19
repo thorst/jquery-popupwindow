@@ -64,7 +64,7 @@
       winPOS = $.popupWindow.win.length - 1;
       
       // try regaining access to the handle
-      $.popupWindow.win[winPOS].win = window.open("", name, paramsJoin);
+      $.popupWindow.win[winPOS].win = window.open("", name, params.join(','));
       try { winHref = $.popupWindow.win[winPOS].win.location.href; } catch (e) { }
     }
         

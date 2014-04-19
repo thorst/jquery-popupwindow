@@ -51,7 +51,6 @@
     var name = options.name || (options.createNew ? 'popup_window_' + random : 'popup_window');
 
     // get existing win handle if exists
-    // would be nice if we could make this persistent
     if (!$.popupWindow.win) { $.popupWindow.win = []; }
     var winPOS = -1;
     for (var i = 0, len = $.popupWindow.win.length; i < len; i++) {
@@ -59,13 +58,19 @@
     }      
 
     // add to global if it didnt already exist
+    var winHref;
     if (winPOS === -1) {
       $.popupWindow.win.push({ name: name, win: { closed: true } });
       winPOS = $.popupWindow.win.length - 1;
+      
+      // try regaining access to the handle
+      $.popupWindow.win[winPOS].win = window.open("", name, paramsJoin);
+      try { winHref = $.popupWindow.win[winPOS].win.location.href; } catch (e) { }
     }
         
     // determine whether to open window
-    if (options.forcerefresh || $.popupWindow.win[winPOS].win.closed) {
+    // the user wants to always refresh, the handle says its closed, the href is a new page
+    if (options.forcerefresh || $.popupWindow.win[winPOS].win.closed || winHref === "about:blank") {
       $.popupWindow.win[winPOS].win = window.open(url, name, params.join(','));
     }
 

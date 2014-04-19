@@ -50,26 +50,31 @@
     var random = new Date().getTime();
     var name = options.name || (options.createNew ? 'popup_window_' + random : 'popup_window');
 
-    // get existing win handle if exists
-    if (!$.popupWindow.win) { $.popupWindow.win = []; }
+    // setup list of handles if needed, and check if win handle exists
     var winPOS = -1;
+    if (!$.popupWindow.win) { $.popupWindow.win = []; }
     for (var i = 0, len = $.popupWindow.win.length; i < len; i++) {
       if ($.popupWindow.win[i].name === name) { winPOS = i; break; }
     }      
 
-    // add to global if it didnt already exist
+    // add to list of handles if it didnt already exist
     var winHref;
     if (winPOS === -1) {
       $.popupWindow.win.push({ name: name, win: { closed: true } });
       winPOS = $.popupWindow.win.length - 1;
       
-      // try regaining access to the handle
+      // try regaining access to the handle, if user refreshed but didnt close all popups
+      // this will fail if its of a different origin
       $.popupWindow.win[winPOS].win = window.open("", name, params.join(','));
       try { winHref = $.popupWindow.win[winPOS].win.location.href; } catch (e) { }
     }
         
     // determine whether to open window
     // the user wants to always refresh, the handle says its closed, the href is a new page
+    // winHref could be 3 possible values
+    // 1. undefined - this failed the assignment above, due to different origin - dont reload url
+    // 2. some url - this passed the assignment above, must be same origin - dont reload url
+    // 3. about:blank - the window didnt exist and the user now has a blank window - reload url
     if (options.forcerefresh || $.popupWindow.win[winPOS].win.closed || winHref === "about:blank") {
       $.popupWindow.win[winPOS].win = window.open(url, name, params.join(','));
     }

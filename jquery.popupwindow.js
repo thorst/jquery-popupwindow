@@ -18,7 +18,8 @@
     status:      false,
     toolbar:     false,
     top:         0,
-    width:       500
+    width:       500,
+    forcerefresh:true
   };
 
   $.popupWindow = function(url, opts) {
@@ -45,10 +46,24 @@
     params.push('left=' + options.left);
     params.push('top=' + options.top);
 
-    // open window
+    // define name
     var random = new Date().getTime();
     var name = options.name || (options.createNew ? 'popup_window_' + random : 'popup_window');
-    var win = window.open(url, name, params.join(','));
+    
+    // try regaining access to a window handle, will fail for different origin
+    var winHref;
+    var win = window.open("", name, params.join(','));
+    try { winHref = win.location.href; } catch (e) { }
+    
+    // determine whether to open window
+    // the user wants to always refresh, the href is a new page
+    // winHref could be 3 possible values
+    // 1. undefined - this failed grabbing url, meaning it exists, but on different origin - dont reload url
+    // 2. some url - this passed the assignment above, must be same origin - dont reload url
+    // 3. about:blank - the window didnt exist and the user now has a blank window - reload url
+    if (options.forcerefresh || winHref === "about:blank") {
+      win = window.open(url, name, params.join(','));
+    }
 
     // unload handler
     if (options.onUnload && typeof options.onUnload === 'function') {

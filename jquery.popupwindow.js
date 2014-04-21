@@ -19,7 +19,7 @@
     toolbar:     false,
     top:         0,
     width:       500,
-    url: ""
+    url:         ""
   };
 
   $.popupWindow = function(url, opts) {

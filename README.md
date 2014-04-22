@@ -51,6 +51,16 @@ minimal chrome.
 $.popupWindow('http://www.google.com', { height: 300, width: 200 });
 ```
 
+### Simple Example with Object as Parameter
+
+Another option is to call `popupWindow` with a single object that contains a url
+key and any other settings. This is functionally the same as the above example
+and is only a stylistic difference.
+
+```
+$.popupWindow({ url: 'http://www.google.com', height: 300, width: 200 });
+```
+
 ### More Examples
 
 There are more [examples] to look at as well.

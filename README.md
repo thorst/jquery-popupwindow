@@ -73,6 +73,7 @@ There are more [examples] to look at as well.
 | `toolbar`    | boolean  | `false` |       |
 | `top`        | integer  | `0`     |       |
 | `width`      | integer  | `500`   |       |
+| `forcerefresh`|boolean  | `true`  | If popup is still open it will refresh the window. Any browsing or form field values will be lost, and they will be taken back to the original page. To just bring focus to the existing popup set to `false` and set `name` to a predictable value. Ex. `name:'somename'` |
 
 ## License
 

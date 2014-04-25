@@ -28,6 +28,14 @@
             }
           });
         });
+        
+        $('.example-objectapi').on('click', function(event) {
+          event.preventDefault();
+          $.popupWindow({
+            url: 'http://google.com'
+          });
+        });
+        
       })
     </script>
   </head>
@@ -41,6 +49,7 @@
       <li><a href="#" class="example-defaults">Open window (with defaults)</a></li>
       <li><a href="#" class="example-small">Open window (custom size: 200x200)</a></li>
       <li><a href="#" class="example-callback">Open window (close callback)</a></li>
+      <li><a href="#" class="example-objectapi">Object API</a></li>
     </ul>
 
     <h2>More Details</h2>
